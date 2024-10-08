@@ -16,6 +16,7 @@ import com.example.entities.Hospede;
 import com.example.repository.HospedeRepository;
 
 @DataJpaTest
+//Esse é o comando que permite testar os dados do JPA da tabela feita no entities
 class HospedeRepositoryTest {
 
 	@Autowired
@@ -26,13 +27,15 @@ class HospedeRepositoryTest {
 	void testSalvarRepository() {
 		//Given / Arrange
 		Hospede hospede1 = new Hospede(null, "Guilherme", "guilherme@gmail.com", "(15)999999999");
+		//O id é null porque o banco gera automaticamente
 		
 		//When / Act
 		Hospede saveHospede = hospedeRepository.save(hospede1);
+		//salvou os valores do hospede1
 		
 		//Then / Assert
-		assertNotNull(saveHospede);
-		assertTrue(saveHospede.getId() > 0);
+		assertNotNull(saveHospede); //verifica se esse valor é nulo 
+		assertTrue(saveHospede.getId() > 0); //verifica se o id é maior que 0, pois se for maior que zero é porque o valor foi salvado
 	}
 
 	@DisplayName("Testando o get para todos os hospedes")
@@ -47,10 +50,11 @@ class HospedeRepositoryTest {
 		
 		//When / Act
 		List<Hospede> hospedeList = hospedeRepository.findAll();
+		//pega os valores e transforma numa lista
 		
 		//Then / Assert
-		assertNotNull(hospedeList);
-		assertEquals(2, hospedeList.size());
+		assertNotNull(hospedeList); //se esse valor não foi nulo ele vai salvar em lista
+		assertEquals(2, hospedeList.size()); //se a quantidade de valores é 2 ele vai verificar se está certo
 	}
 	
 	@DisplayName("Testando o Get By Id")
@@ -62,31 +66,34 @@ class HospedeRepositoryTest {
 		hospedeRepository.save(hospede1);
 		
 		//When / Act
-		Hospede saveHospede = hospedeRepository.findById(hospede1.getId()).get();
+		Hospede saveHospede = hospedeRepository.findById(hospede1.getId()).get(); 
+		//ele puxa o valor por id
 		
 		//Then / Assert
-		assertNotNull(saveHospede);
-		assertEquals(hospede1.getId(), saveHospede.getId());
+		assertNotNull(saveHospede); //se esse valor não foi nulo ele vai salvar
+		assertEquals(hospede1.getId(), saveHospede.getId()); //verificando os valores se eles resistem
 	}
 	
 	@DisplayName("Testando o Get By Id")
 	@Test
 	void testUpdateRepository() {
+		//não existe update, ele apenas junta o find by id com o save
+		
 		//Given / Arrange
 		Hospede hospede1 = new Hospede(null, "Guilherme", "guilherme@gmail.com", "(15)999999999");
 		
 		hospedeRepository.save(hospede1);
 		
 		//When / Act
-		Hospede saveHospede = hospedeRepository.findById(hospede1.getId()).get();
-		hospede1.setNome("Leonardo");
-		hospede1.setEmail("leonardo@gmail.com");
+		Hospede saveHospede = hospedeRepository.findById(hospede1.getId()).get(); //chama pelo id
+		hospede1.setNome("Leonardo"); //altera o valor
+		hospede1.setEmail("leonardo@gmail.com"); //altera
 		
-		Hospede updateHospede = hospedeRepository.save(saveHospede);
+		Hospede updateHospede = hospedeRepository.save(saveHospede); //salva
 		
 		//Then / Assert
 		assertNotNull(updateHospede);
-		assertEquals("Leonardo", updateHospede.getNome());
+		assertEquals("Leonardo", updateHospede.getNome()); 
 		assertEquals("leonardo@gmail.com", updateHospede.getEmail());
 	}
 	
@@ -96,14 +103,15 @@ class HospedeRepositoryTest {
 		//Given / Arrange
 		Hospede hospede1 = new Hospede(null, "Guilherme", "guilherme@gmail.com", "(15)999999999");
 		
-		hospedeRepository.save(hospede1);
+		hospedeRepository.save(hospede1); //primeiro salva os valores
 		
 		//When / Act
-		hospedeRepository.deleteById(hospede1.getId());
+		hospedeRepository.deleteById(hospede1.getId()); //deleta por id 
 		
 		Optional<Hospede> hospedeOptional = hospedeRepository.findById(hospede1.getId()); 
+		//hospede depois de deletado, verifica pelo optional se o valor ainda existe ou não
 		
 		//Then / Assert
-		assertTrue(hospedeOptional.isEmpty());
+		assertTrue(hospedeOptional.isEmpty()); //se estiver vazia ele coloca certo senão, errado
 	}
 }
